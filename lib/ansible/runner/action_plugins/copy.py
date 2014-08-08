@@ -54,6 +54,10 @@ class ActionModule(object):
         raw     = utils.boolean(options.get('raw', 'no'))
         force   = utils.boolean(options.get('force', 'yes'))
 
+        # Expand ENV Vars in source and dest
+        source = os.path.expanduser(os.path.expandvars(source))
+        dest = os.path.expanduser(os.path.expandvars(dest))
+
         # content with newlines is going to be escaped to safely load in yaml
         # now we need to unescape it so that the newlines are evaluated properly
         # when writing the file to disk
