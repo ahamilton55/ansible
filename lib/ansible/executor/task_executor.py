@@ -213,6 +213,12 @@ class TaskExecutor:
         # variables to the variable dictionary
         self._play_context.update_vars(variables)
 
+        # get the connection and the handler for this execution
+        self._connection = self._get_connection(variables, templar)
+        self._connection.set_host_overrides(host=self._host)
+
+        self._handler = self._get_action_handler(connection=self._connection, templar=templar)
+
         # Evaluate the conditional (if any) for this task, which we do before running
         # the final task post-validation. We do this before the post validation due to
         # the fact that the conditional may specify that the task be skipped due to a
@@ -382,7 +388,7 @@ class TaskExecutor:
         else:
             return async_result
 
-    def _get_connection(self, variables):
+    def _get_connection(self, variables, templar):
         '''
         Reads the connection property for the host, and returns the
         correct connection object from the list of connection plugins
@@ -395,6 +401,7 @@ class TaskExecutor:
             self._play_context.remote_addr = self._host.ipv4_address
 
         if self._task.delegate_to is not None:
+            self._task.delegate_to = templar.template(self._task.delegate_to)
             self._compute_delegate(variables)
 
         conn_type = self._play_context.connection
