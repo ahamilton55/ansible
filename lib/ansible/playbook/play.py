@@ -229,7 +229,8 @@ class Play(Base, Taggable, Become):
         Override post validation of vars_files on the play, as we don't want to
         template these too early.
         '''
-        return value
+        #return value
+        return templar.template(value)
 
     # FIXME: post_validation needs to ensure that become/su/sudo have only 1 set
 
