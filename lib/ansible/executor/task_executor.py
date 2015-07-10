@@ -248,7 +248,7 @@ class TaskExecutor:
             return dict(include=include_file, include_variables=include_variables)
 
         # get the connection and the handler for this execution
-        self._connection = self._get_connection(variables)
+        self._connection = self._get_connection(variables, templar)
         self._connection.set_host_overrides(host=self._host)
 
         self._handler = self._get_action_handler(connection=self._connection, templar=templar)
